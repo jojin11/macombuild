@@ -1,0 +1,32 @@
+app:
+    name: rmsengine
+    code: rmsengine
+    notify: kunnikrishnan@ecloudcontrol.com
+
+build:
+    version: 1.0
+    env: DEV
+    build_file: none
+    output_files: output/*.zip
+    image_template: macombuild-1.0
+
+deploy:
+    context: rms/DEV
+    type: statefulset
+    replicas: 1
+    port:
+    - 80
+
+volumes:
+  - claim: rmsengine-pvc
+    mount: /appz/data/
+    name: data
+    size: 50Gi
+    mode: ReadWriteOnce 
+
+properties:
+    revision : 13
+    APPZ_PLAYLIST : "iis"
+    IIS_HOSTNAME : "localhost"
+    SECRET_TOKEN:
+       vault: SECRET_TOKEN
